@@ -22,6 +22,8 @@ namespace EF_Core_Generics.Repos
         void Update(T entity);
         void SaveChanges();
 
+        void Rollback();
+
         Task<T> GetByIdAsync(object id);
         Task UpdateAsync(T entity);
         Task SaveChangesAsync();

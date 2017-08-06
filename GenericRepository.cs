@@ -75,5 +75,14 @@ namespace EF_Core_Generics.Repos
         {
             await context.SaveChangesAsync();
         }
+
+        public void Rollback()
+        {
+            context
+                .ChangeTracker
+                .Entries()
+                .ToList()
+                .ForEach(x => x.Reload());
+        }
     }
 }
