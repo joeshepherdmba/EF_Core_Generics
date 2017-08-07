@@ -59,6 +59,30 @@ namespace EF_Core_Generics.Repos
         {
             context.Dispose();
         }
+        public void Rollback()
+        {
+            context
+                .ChangeTracker
+                .Entries()
+                .ToList()
+                .ForEach(x => x.Reload());
+        }
+
+        // Async section
+        #region Async Methods
+
+        public async Task<IEnumerable<T>> GetAllAsync()
+        {
+            return await DbSet.ToListAsync();
+        }
+            
+        public async Task<IEnumerable<T>> SearchForAsync(Expression<Func<T, bool>> predicate)
+        {// was IQueryable
+            var local = DbSet.Local.Where(predicate.Compile());
+	        return local.Any()
+                ? local
+                : await DbSet.Where(predicate).ToArrayAsync().ConfigureAwait(false);
+        }
 
         public async Task<T> GetByIdAsync(object id)
         {
@@ -75,14 +99,6 @@ namespace EF_Core_Generics.Repos
         {
             await context.SaveChangesAsync();
         }
-
-        public void Rollback()
-        {
-            context
-                .ChangeTracker
-                .Entries()
-                .ToList()
-                .ForEach(x => x.Reload());
-        }
+        #endregion
     }
 }

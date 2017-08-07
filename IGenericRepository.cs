@@ -21,9 +21,10 @@ namespace EF_Core_Generics.Repos
         T GetById(object id);
         void Update(T entity);
         void SaveChanges();
-
         void Rollback();
 
+        Task<IEnumerable<T>> SearchForAsync(Expression<Func<T, bool>> predicate);
+        Task<IEnumerable<T>> GetAllAsync();
         Task<T> GetByIdAsync(object id);
         Task UpdateAsync(T entity);
         Task SaveChangesAsync();
